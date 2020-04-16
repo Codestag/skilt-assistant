@@ -42,6 +42,7 @@ if ( ! class_exists( 'Skilt_Assistant' ) ) :
 			if ( ! isset( self::$instance ) && ! ( self::$instance instanceof Skilt_Assistant ) ) {
 				self::$instance = new Skilt_Assistant();
 				self::$instance->define_constants();
+				self::$instance->init();
 				self::$instance->includes();
 			}
 		}
@@ -72,6 +73,15 @@ if ( ! class_exists( 'Skilt_Assistant' ) ) :
 		}
 
 		/**
+		 * Initialize plugin hooks.
+		 *
+		 * @since 1.0
+		 */
+		public function init() {
+			add_action( 'admin_enqueue_scripts', array( $this, 'plugin_admin_assets' ) );
+		}
+
+		/**
 		 * Loads required files.
 		 *
 		 * @since 1.0
@@ -85,6 +95,22 @@ if ( ! class_exists( 'Skilt_Assistant' ) ) :
 				require_once SA_PLUGIN_PATH . 'includes/meta/background.php';
 			endif;
 
+		}
+
+		/**
+		 * Enqueue required scripts and styles.
+		 *
+		 * @param string $hook Current page slug.
+		 *
+		 * @since 1.0
+		 * @return void
+		 */
+		public function plugin_admin_assets( $hook ) {
+			if ( $hook === 'post.php' || $hook === 'post-new.php' ) {
+				wp_enqueue_media();
+				wp_enqueue_script( 'wp-color-picker' );
+				wp_enqueue_style( 'stag-admin-metabox', SA_PLUGIN_URL . 'assets/css/stag-admin-metabox.css', array( 'wp-color-picker' ), SA_VERSION, 'screen' );
+			}
 		}
 	}
 endif;
