@@ -5,7 +5,7 @@
  * Description: A plugin to assit Skilt theme with additional features.
  * Author: Codestag
  * Author URI: https://codestag.com
- * Version: 1.0
+ * Version: 1.0.0
  * Text Domain: skilt-assistant
  * License: GPL2+
  * License URI: https://www.gnu.org/licenses/gpl-2.0.txt
@@ -53,7 +53,7 @@ if ( ! class_exists( 'Skilt_Assistant' ) ) :
 		 * @since 1.0
 		 */
 		public function define_constants() {
-			$this->define( 'SA_VERSION', '1.0' );
+			$this->define( 'SA_VERSION', '1.0.0' );
 			$this->define( 'SA_DEBUG', true );
 			$this->define( 'SA_PLUGIN_PATH', plugin_dir_path( __FILE__ ) );
 			$this->define( 'SA_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
@@ -106,7 +106,7 @@ if ( ! class_exists( 'Skilt_Assistant' ) ) :
 		 * @return void
 		 */
 		public function plugin_admin_assets( $hook ) {
-			if ( $hook === 'post.php' || $hook === 'post-new.php' ) {
+			if ( 'post.php' === $hook || 'post-new.php' === $hook ) {
 				wp_enqueue_media();
 				wp_enqueue_script( 'wp-color-picker' );
 				wp_enqueue_style( 'stag-admin-metabox', SA_PLUGIN_URL . 'assets/css/stag-admin-metabox.css', array( 'wp-color-picker' ), SA_VERSION, 'screen' );
@@ -144,11 +144,7 @@ function skilt_assistant_activation_notice() {
 function skilt_assistant_activation_check() {
 	$theme = wp_get_theme(); // gets the current theme.
 	if ( 'Skilt' === $theme->name || 'Skilt' === $theme->parent_theme ) {
-		if ( function_exists( 'is_multisite' ) && is_multisite() ) {
-			add_action( 'after_setup_theme', 'skilt_assistant' );
-		} else {
-			skilt_assistant();
-		}
+		add_action( 'after_setup_theme', 'skilt_assistant' );
 	} else {
 		if ( ! function_exists( 'deactivate_plugins' ) ) {
 			require_once ABSPATH . 'wp-admin/includes/plugin.php';
